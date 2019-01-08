@@ -1,12 +1,12 @@
 """ mongofarm.py
 
-	This file presumes a running mongod instance.
+    This file presumes a running mongod instance.
 
-	Multiple learning TODO items are listed.
+    Multiple learning TODO items are listed.
 
-	PyMongo is the Python driver for MongoDB.  
-	The PyMongo docs are here:
-	https://api.mongodb.com/python/current/
+    PyMongo is the Python driver for MongoDB.  
+    The PyMongo docs are here:
+    https://api.mongodb.com/python/current/
 """
 
 from pymongo import MongoClient
@@ -22,11 +22,11 @@ choice = input("\nWant to add a document? Y/n > ")
 adding_data = (True if "Y" == choice else False)
 
 if adding_data:
-	db.animals.insert_one({
-		"name": "Charlotte",
-		"type": "spider",
-		"age": 100,
-		"favorite_foods": ["aphids","moths","flies"]})
+    db.animals.insert_one({
+      "name": "Charlotte",
+      "type": "spider",
+      "age": 100,
+      "favorite_foods": ["aphids","moths","flies"]})
 
 print("\nLooking for data...\n")
 animal = db.animals.find_one()  # returns a document or None
@@ -39,13 +39,15 @@ print(animal)
 print("\nRetrieving a specific field from all documents....\n")
 
 for item in db.animals.find():
-    print(item["favorite_foods"])
-
+    try:
+        print(item["favorite_foods"])
+    except KeyError as e:
+        pass  # not all documents have `favorite_foods` key
 
 # TODO 0
 # Read this entire file and add comments explaining each line.
 # BEFORE you run the file, open the mongo shell and run this command:
-#     		> show dbs
+#           > show dbs
 
 # Does the `farm` database exist yet?
 
@@ -53,12 +55,13 @@ for item in db.animals.find():
 # TODO 1
 # Run the file!    
 # Use the mongo shell to go see what's in the database.
-#			 > use farm
-#			 > db.animals.findOne()
+#            > use farm
+#            > show collections
+#            > db.animals.findOne()
 
 
 # TODO 2
-# Un-comment lines 31-33.  Run the file.  
+# Un-comment lines 33-35.  Run the file.  
 # Change the data loading code to add a different farm animal.
 # Change the query on line 31 to retrieve the different farm animal.
 # Have your new query use the `age` or `type` key (not `name`).
@@ -73,7 +76,20 @@ for item in db.animals.find():
 # Write a function which adds animals to the farm.  
 # (specifically, it adds documents to the `animals` collection
 # inside the `farm` database)
-# 		What's the advantage of having a function?
+#       What's the advantage of having a function?
+#       Here are a few animals you can add.
+#       Note: you can create variables
+
+# new_animal = {
+#     "name": "Templeton",
+#     "type": "rat",
+#     "age": 4}
+# db.animals.insert_one(new_animal)
+
+# animal2 = {
+#   "name": "Wilbur",
+#   "type": "pig",
+#   "age": 20}
 
 
 # TODO 5
@@ -81,11 +97,15 @@ for item in db.animals.find():
 # and which enforces a schema on that dictionary.
 # Return `True` if the dictionary has the right schema;
 # return `False` otherwise.
+# If the dictionary has the right schema, use your function
+# from TODO 4 to add it to the database.
+# Otherwise, give the user a message stating that the data
+# is invalid and cannot be added to the database.
 
 
 # TODO 6
 # Write a function which loads data from a CSV into MongoDB.
-# Use the function you wrote in TODO 5 in order to enforce a schema.
+# Use the functions you wrote in TODO 4 & 5 in order to enforce a schema.
 # Feel free to continue using the Charlotte's Web example
 # or devise a new example. 
 # Make sure you provide human-readable error messages.
